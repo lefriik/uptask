@@ -7,6 +7,7 @@ import usuarioRoutes from './routes/usuarioRoutes.js'
 
 
 const app = express();
+app.use(express.json()); //Para procesar la informacion tipo json que se recibe del formulario
 
 dotenv.config() // buscara por el archivo .env
 

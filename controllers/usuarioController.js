@@ -1,7 +1,27 @@
+//Es necesario importar el modelo dentro del controlador
+import Usuario from "../models/Usuario.js"
 
+const registrar = async (req, res) => {
 
-const registrar = (req, res) => {
-    res.json( { msg: 'Registrando usuario' });
+    // Evitar registros duplicados
+    const { email } = req.body;
+    const existeUsuario = await Usuario.findOne({ email })
+
+    if(existeUsuario){
+        const error = new Error('Usuario ya registrado');
+        return res.status(400).json({ msg: error.message })
+    }
+
+    try {
+        const usuario = new Usuario(req.body) //crea un nuevo objeto tipo usuario con la info del modelo
+        const usuarioAlmacenado = await usuario.save()
+        res.json( usuarioAlmacenado );
+      
+    } catch (error) {
+        console.log(error)
+    }
+
+    
 }
 
 
