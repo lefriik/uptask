@@ -5,7 +5,7 @@ const conectarDB = async () => {
         const connection = await mongoose.connect(
             process.env.MONGO_URI, //variable de entorno bd
             {
-                useNewUrlParser: true,
+                useNewUrlParser: true, //configuracion de mongoose
                 useUnifiedTopology: true,
             }
         );
