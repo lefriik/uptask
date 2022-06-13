@@ -5,6 +5,7 @@ import conectarDB from './config/db.js'; /*Como es un archivo creado por mi debo
 import dotenv from 'dotenv';
 import usuarioRoutes from './routes/usuarioRoutes.js'
 import proyectoRoutes from './routes/proyectoRoutes.js'
+import tareaRoutes from './routes/tareaRoutes.js'
 
 
 const app = express();
@@ -22,6 +23,7 @@ conectarDB();
 //ruta controlador
 app.use("/api/usuarios", usuarioRoutes) // .use soporta todos los verbos http por lo tanto podemos asociar el route (usuarioRoutes hacia el endpoint /api/usuarios)
 app.use("/api/proyectos", proyectoRoutes)
+app.use("/api/tareas", tareaRoutes)
 
 const PORT = process.env.PORT || 4000; //variable para produccion
 
