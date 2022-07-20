@@ -50,6 +50,49 @@ app.use("/api/tareas", tareaRoutes)
 
 const PORT = process.env.PORT || 4000; //variable para produccion
 
-app.listen(PORT, () => {
+const servidor = app.listen(PORT, () => {
     console.log(`Servidor corriendo en puerto ${PORT}`)
 }) /* Esta funcion correra gracias a que en el archivo package.json en la seccion de scripts habilite el comando node index.js con el que podre ejecutar npm run dev */
+
+
+// Socket IO
+
+import { Server } from 'socket.io'
+
+const io = new Server(servidor, {
+    pingTimeout: 60000,
+    cors: {
+        origin: process.env.FRONTEND_URL,
+    },
+})
+
+io.on('connection', (socket) => {
+    console.log('Conectado a socket.io')
+
+    // Definir los eventos de socket io
+    socket.on("abrir proyecto", (proyecto) => {
+        socket.join(proyecto)
+    })
+
+    socket.on("nueva tarea", (tarea) => {
+        const proyecto  = tarea.proyecto
+        socket.on(proyecto).emit('tarea agregada', tarea)
+    })
+
+    socket.on('eliminar tarea', tarea => {
+        const proyecto = tarea.proyecto
+        socket.to(proyecto).emit('tarea eliminada', tarea)
+    })
+
+    socket.on('actualizar tarea', (tarea) => {
+        const proyecto = tarea.proyecto._id
+        socket.to(proyecto).emit('tarea actualizada', tarea)
+    })
+
+    socket.on('cambiar estado', (tarea) => {
+        const proyecto = tarea.proyecto._id;
+
+        socket.to(proyecto).emit('nuevo estado', tarea)
+    })
+
+})
